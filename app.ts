@@ -74,35 +74,35 @@ newProcess.processData([1, 2, 3, 4, 5]);
 
 // 4-mashq
 
-// function ValidatePositive(
-//   target: any,
-//   methodName: string,
-//   parameterIndex: number
-// ) {
-//   const existingValidation: any[] =
-//     Reflect.getOwnMetadata("design:paramtypes", target, methodName) || [];
-//   existingValidation[parameterIndex] = (value: any) => {
-//     if (value <= 0) {
-//       throw new Error(`${methodName} parametr musbat bo'lishi kerak`);
-//     }
-//   };
-//   Reflect.defineMetadata(
-//     "design:paramtypes",
-//     existingValidation,
-//     target,
-//     methodName
-//   );
-// }
+function ValidatePositive(
+  target: any,
+  methodName: string,
+  parameterIndex: number
+) {
+  const existingValidation: any[] =
+    Reflect.getOwnMetadata("design:paramtypes", target, methodName) || [];
+  existingValidation[parameterIndex] = (value: any) => {
+    if (parameterIndex <= 0) {
+      return `${methodName} parametr musbat bo'lishi kerak`;
+    }
+  };
+  Reflect.defineMetadata(
+    "design:paramtypes",
+    existingValidation,
+    target,
+    methodName
+  );
+}
 
-// class BankAccount {
-//   //@ts-ignore
-//   @ValidatePositive
-//   private balance: number = 0;
-//   deposit(amount: number) {
-//     this.balance += amount;
-//     return this.balance;
-//   }
-// }
+class BankAccount {
+  //@ts-ignore
+  @ValidatePositive
+  private balance: number = 0;
+  deposit(amount: number) {
+    this.balance += amount;
+    return this.balance;
+  }
+}
 
-// const account = new BankAccount();
-// console.log(account.deposit(100));
+const account = new BankAccount();
+console.log(account.deposit(-1));
